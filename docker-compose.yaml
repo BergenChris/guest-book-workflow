@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  db:
+    image: mariadb:latest
+    volumes:
+      - gbsql:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: my-secret-pw
+    ports:
+      - "3307:3306"
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USER=root 
+      - DB_PASSWORD=my-secret-pw
+      - MAIL_USER=maakt-niet-uit
+      - MAIL_PW=maakt-niet-uit
+      - MAIL_HOST=mailhog
+    depends_on:
+      - db
+  mailhog:
+    ports:
+      # "587:587" mapping gebeurd van server naar serve, niet op onze laptop zelf
+      - "8025:8025"
+    image: 42bv/mailhog:latest
+volumes:
+  gbsql: ~
+     
